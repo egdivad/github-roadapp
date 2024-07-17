@@ -154,10 +154,10 @@ def vert_geo():
 		col1, col2 = st.columns(2)
 
 		col1.write(r'Austroads Part 3, Section 3.3')
-		col1.dataframe(speed_data, use_container_width=True)
+		col1.dataframe(speed_data, use_container_width=True, hide_index=True)
 
 		col2.write(r'Austroads Part 3, Section 8.6.8')
-		col2.dataframe(max_grade_change, use_container_width=True)
+		col2.dataframe(max_grade_change, use_container_width=True, hide_index=True)
 		
 
 def crest_curves():
@@ -439,3 +439,50 @@ with test_tab:
 		v1.html(html_string)
 
 
+# Testing locating reference tables in the side bar
+with st.sidebar:
+	# side_tab1 = st.tabs(["Reference Table"])
+	file_path = r"C:\Users\David.Ge\repo\Aurecon Github\github-roadapp\spreadsheets\tables.xlsx"
+	# df = pd.read_excel(file_path, 3)
+
+	# # Get the column names from the table
+	# column_names = df.columns
+
+	# # Set the side bar title 
+	# st.sidebar.header(column_names[0])
+	st.sidebar.header("Reference Tables")
+	
+	# # Use the first data row as the column headers
+	# headers = df.iloc[0].values
+	# df.columns = headers
+
+	# # st.sidebar.header(df.iloc[0,0])
+	
+	# # Remove the first data row
+	# df = pd.DataFrame(df[1:])
+	# st.dataframe(df, use_container_width=True, hide_index=True)
+
+
+
+	xls = pd.ExcelFile(file_path)
+	dfs = {sheet_name: xls.parse(sheet_name) for sheet_name in xls.sheet_names}
+
+	selected_sheet = st.selectbox("Select a table", list(dfs.keys()))
+	df = pd.read_excel(file_path, selected_sheet)
+
+	# Get the column names from the table
+	column_names = df.columns
+
+	# Set the side bar title 
+	st.sidebar.header(column_names[0])
+	# st.sidebar.header("Reference Tables")
+	
+	# Use the first data row as the column headers
+	headers = df.iloc[0].values
+	df.columns = headers
+
+	# st.sidebar.header(df.iloc[0,0])
+	
+	# Remove the first data row
+	df = pd.DataFrame(df[1:])
+	st.dataframe(df, use_container_width=True, hide_index=True)

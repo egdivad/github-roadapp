@@ -39,36 +39,31 @@ Run the py script will open a web browser with the app loaded.
 
 
 
-# 2. Requirements / What is needed
-- Streamlit account
+# 2. Prerequisites
 - Python 3
-- Streamlit package
-   ```
-   pip install streamlit
-   ```
 
 <br>
 
 
 
 
-# 3. Installation / How to Install
+# 3. Installation Guide
 
-For Streamlit documention: [Get started with Streamlit](https://docs.streamlit.io/get-started)
+This project is a POC and should only be run locally. Instructions to run locally are below:
 
 ### How to run it on your own machine
 
 1. Setup virtual environment
-   ```
+   ```py
    # Navigate to the project folder
-   cd project_director
+   cd path\to\project\directory
 
    # Create virtual environment in project folder
    python -m venv .venv
 
    # Activate virtual environment
-   .evn\Scripts\activate.bat #In CMD
-   .env\Scripts\Activate.ps1 #In Powershell
+   .venv\Scripts\activate.bat #In CMD
+   .venv\Scripts\Activate.ps1 #In Powershell
    ```
 
 2. Install the requirements

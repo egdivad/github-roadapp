@@ -166,3 +166,4 @@ cython_debug/
 
 # Custom Folder
 spreadsheets/
+.sandbox

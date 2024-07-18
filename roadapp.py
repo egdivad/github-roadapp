@@ -1,10 +1,12 @@
+import os
 import math
-import streamlit as st
 from PIL import Image
 
+import streamlit as st
 import pandas as pd
 
-import os
+# import custom formula library
+from modules.util import formulas
 
 # ----------------------/---------------------- #
 # Reading data from excel - this is so that people can edit the excel rather than edit the code
@@ -58,8 +60,8 @@ def adverse_crossfall():
 
 		# display_formula = st.latex(r'''R = V^2 / (127(e+f))''')
 		# st.latex(r'R = \frac {V^2} {127 * (e + f) }') # This is a nicer format on fraction
-		fm_R = r'R = \frac {V^2} {127 * (e + f) }'
-		st.latex(fm_R)
+		display_fm_R = formulas.adverse_crossfall_fm_R()[0]
+		st.latex(display_fm_R)
 		# st.latex(str(f1)) # Get formula from excel
 
 	with st.container(border=True):
@@ -72,7 +74,7 @@ def adverse_crossfall():
 		e = col2.number_input(label="e - Super", value=-0.03)
 
 		# Calculation
-		R = round(V**2 / (127 * (e + f)), 3)
+		R = eval(formulas.adverse_crossfall_fm_R()[1])
 
 	with st.container(border=True):
 		st.write("📐 Results")
@@ -161,73 +163,74 @@ def crest_curves():
 	# Display Formula
 	with st.container(border=True):
 		st.write("📖 Formula")
-		fm_S = r'S = RT * \frac{V}{3.6} + \frac {V^2}  {254 * (d + 0.01 * a)}'
-		fm_K = r'K = \frac{S^2}{200 * ( \sqrt{h_1} + \sqrt{h_2} )^2}'
-		st.latex(fm_S)
-		st.latex(fm_K)
-		# st.latex(fm_S + ' , ' + fm_K)
-
-		# st.latex(f2) # Get formula from excel
-		# st.latex(f3) # Get formula from excel
+		display_fm_S = formulas.crest_curves_fm_S()[0]
+		display_fm_K = formulas.crest_curves_fm_K()[0]
+		st.latex(display_fm_S)
+		st.latex(display_fm_K)
 
 	col1, col2 = st.columns(2)
 	with col1.container(border=True):
 		st.write("🚗 Cars")
+
 		# Variable Inputs
-		V_01 = st.number_input(label="V - Design Speed", value=100.00, key="V_01")
-		RT_01 = st.number_input(label="RT", value=3.0, key="RT_01")
-		d_01 = st.number_input(label="d", value=0.15, key="d_01")
-		a_01 = st.number_input(label="a", value=0, key="a_01")
+		V = st.number_input(label="V - Design Speed", value=100.00, key="V_01")
+		RT = st.number_input(label="RT", value=3.0, key="RT_01")
+		d = st.number_input(label="d", value=0.15, key="d_01")
+		a = st.number_input(label="a", value=0, key="a_01")
 		
 		# Calculation formula
-		S_01 = RT_01 * V_01 / 3.6 + V_01**2 / (254 * (d_01 + 0.01 * a_01))
+		S = eval(formulas.crest_curves_fm_S()[1])
+
 		# Display result
 		st.markdown("<h2 style='font-size: 16px; text-align: left;'>S - Sight Distance:</h2>", unsafe_allow_html=True)
-		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{S_01:.2f} m</h2>", unsafe_allow_html=True)
+		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{S:.2f} m</h2>", unsafe_allow_html=True)
 		
 		# Variable Inputs
-		h_1_01 = st.number_input(label="H1 - Eye Height", value=1.1, key="h_1_01")
-		h_2_01 = st.number_input(label="H2 - Object Height", value=0.2, key="h_2_01")
+		h_1 = st.number_input(label="H1 - Eye Height", value=1.1, key="h_1_01")
+		h_2 = st.number_input(label="H2 - Object Height", value=0.2, key="h_2_01")
 
 		# Calculation formula
-		K_01 = S_01**2 / (200 * (math.sqrt(h_1_01) + math.sqrt(h_2_01) )**2)
+		K = eval(formulas.crest_curves_fm_K()[1])
+
 		# Display result
 		st.markdown("<h2 style='font-size: 16px; text-align: left;'>K:</h2>", unsafe_allow_html=True)
-		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{K_01:.2f}</h2>", unsafe_allow_html=True)
+		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{K:.2f}</h2>", unsafe_allow_html=True)
 
 		st.write("---")
 		st.markdown("<h1 style='font-size: 24px; text-align: left;'>Minimum Radius - Cars:</h1>", unsafe_allow_html=True)
-		st.markdown(f"<h1 style='font-size: 36px; text-align: center; border: 1px solid;'>{K_01*100:.2f} m</h1>", unsafe_allow_html=True)
+		st.markdown(f"<h1 style='font-size: 36px; text-align: center; border: 1px solid;'>{K*100:.2f} m</h1>", unsafe_allow_html=True)
 		st.markdown("<br>", unsafe_allow_html=True)
 		
 
 	with col2.container(border=True):
 		st.write("🚚 Trucks")
 		# Variable Inputs
-		V_02 = st.number_input(label="V - Design Speed", value=80.00, key="V_02")
-		RT_02 = st.number_input(label="RT", value=2.0, key="RT_02")
-		d_02 = st.number_input(label="d", value=0.20, key="d_02")
-		a_02 = st.number_input(label="a", value=0, key="a_02")
+		V = st.number_input(label="V - Design Speed", value=80.00, key="V_02")
+		RT = st.number_input(label="RT", value=2.0, key="RT_02")
+		d = st.number_input(label="d", value=0.20, key="d_02")
+		a = st.number_input(label="a", value=0, key="a_02")
 		
 		# Calculation formula
-		S_02 = RT_02 * V_02 / 3.6 + V_02**2 / (254 * (d_02 + 0.01 * a_02))
+		S = eval(formulas.crest_curves_fm_S()[1])
+
 		# Display result
 		st.markdown("<h2 style='font-size: 16px; text-align: left;'>S - Sight Distance:</h2>", unsafe_allow_html=True)
-		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{S_02:.2f} m</h2>", unsafe_allow_html=True)
+		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{S:.2f} m</h2>", unsafe_allow_html=True)
 
 		# Variable Inputs
-		h_1_02 = st.number_input(label="H1 - Eye Height", value=2.4, key="h_1_02")
-		h_2_02 = st.number_input(label="H2 - Object Height", value=0.2, key="h_2_02")
+		h_1 = st.number_input(label="H1 - Eye Height", value=2.4, key="h_1_02")
+		h_2 = st.number_input(label="H2 - Object Height", value=0.2, key="h_2_02")
 
 		# Calculation formula
-		K_02 = S_02**2 / (200 * (math.sqrt(h_1_02) + math.sqrt(h_2_02) )**2)
+		K = eval(formulas.crest_curves_fm_K()[1])
+
 		# Display result
 		st.markdown("<h2 style='font-size: 16px; text-align: left;'>K:</h2>", unsafe_allow_html=True)
-		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{K_02:.2f}</h2>", unsafe_allow_html=True)
+		st.markdown(f"<h2 style='font-size: 24px; text-align: center; border: 1px solid;'>{K:.2f}</h2>", unsafe_allow_html=True)
 
 		st.write("---")
 		st.markdown("<h1 style='font-size: 24px; text-align: left;'>Minimum Radius - Trucks:</h1>", unsafe_allow_html=True)
-		st.markdown(f"<h1 style='font-size: 36px; text-align: center; border: 1px solid;'>{K_02*100:.2f} m</h1>", unsafe_allow_html=True)
+		st.markdown(f"<h1 style='font-size: 36px; text-align: center; border: 1px solid;'>{K*100:.2f} m</h1>", unsafe_allow_html=True)
 		st.markdown("<br>", unsafe_allow_html=True)
 
 
@@ -240,15 +243,15 @@ def crest_curves():
 
 def aquaplaning():
 	# Display Formula
-	fm_D = r"D = \frac{0.103 * T^{0.11} * L^{0.43} * I^{0.59}} {S^{0.42}} - T"
-	fm_L = r"L = [ \frac{(D + T)*S^{0.42}}  {(0.103*T^{0.11})*I^{0.59}}] ^ {\frac{1}{0.43}}"
-	fm_S = r"S = (Pavement Crossfall ^ 2 + Longitudinal Grade ^ 2) ^ {0.5}"
+	display_fm_D = formulas.aquaplaning_fm_D()[0]
+	display_fm_L = formulas.aquaplaning_fm_L()[0]
+	display_fm_S = formulas.aquaplaning_fm_S()[0]
 
 	with st.expander(label="Where no super transition", expanded=True):
 		with st.container(border=True):
 			st.write("📖 Formula")
-			st.latex(fm_S)
-			st.latex(fm_L)		
+			st.latex(display_fm_S)
+			st.latex(display_fm_L)		
 
 		with st.container(border=True):
 			st.write("✍️ Inputs")
@@ -260,8 +263,9 @@ def aquaplaning():
 			long_grade = col2.number_input(label=r"Longitudinal Grade (%)", value=0.5, key="lg1")
 
 			# Calculation
-			S = (pave_cross_fall**2 + long_grade**2)**0.5
-			L = ((D + T) * S**0.42 / (0.103 * T**0.11 * I**0.59))**(1/0.43)
+
+			S = eval(formulas.aquaplaning_fm_S()[1])
+			L = eval(formulas.aquaplaning_fm_L()[1])
 
 		with st.container(border=True):
 			st.write("📐 Results")
@@ -277,7 +281,7 @@ def aquaplaning():
 	with st.expander(label="Where there is superelevation", expanded=True):
 		with st.container(border=True):
 			st.write("📖 Formula")
-			st.latex(fm_L)			
+			st.latex(display_fm_L)			
 
 		with st.container(border=True):
 			st.write("✍️ Inputs")
@@ -288,7 +292,7 @@ def aquaplaning():
 			S = col2.number_input(label=r"S - Slope of Drainage Path (%)", value=0.96, key="S2")
 
 			# Calculation
-			L = ((D + T) * S**0.42 / (0.103 * T**0.11 * I**0.59))**(1/0.43)
+			L = eval(formulas.aquaplaning_fm_L()[1])
 
 		with st.container(border=True):
 			st.write("📐 Results")
@@ -301,8 +305,8 @@ def aquaplaning():
 	with st.expander(label="Where there is superelevation", expanded=True):
 		with st.container(border=True):
 			st.write("📖 Formula")
-			st.latex(fm_S)
-			st.latex(fm_D)	
+			st.latex(display_fm_S)
+			st.latex(display_fm_D)	
 
 		with st.container(border=True):
 			st.write("✍️ Inputs")
@@ -314,7 +318,7 @@ def aquaplaning():
 
 			# Calculation
 			S = H / L
-			D = ( (0.103 * T**0.11 * L**0.43 * I**0.59) / (S*100)**0.42 ) - T
+			D = eval(formulas.aquaplaning_fm_D()[1])
 
 		with st.container(border=True):
 			st.write("📐 Results")
@@ -326,10 +330,7 @@ def aquaplaning():
 			st.markdown(r"<br>", unsafe_allow_html=True)
 
 
-
-
 parent_tab_1, parent_tab_2, parent_tab_3 = st.tabs([r"QLD", r"NSW", r"SAVI"])
-# parent_tab_1, parent_tab_2, parent_tab_3 = st.sidebar([r"QLD", r"NSW", r"SAVI"])
 
 with parent_tab_1:
 

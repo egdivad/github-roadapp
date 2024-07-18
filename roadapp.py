@@ -8,11 +8,8 @@ import os
 
 # ----------------------/---------------------- #
 # Reading data from excel - this is so that people can edit the excel rather than edit the code
-formula_sheet = r"/spreadsheets/formulas.xlsx"
-
-# data_sheet_path = r'\spreadsheets\formulas.xlsx'
-# data_sheet_path = os.path.join(os.path.dirname(__file__), formula_sheet)
-data_sheet_path = r"C:\Users\David.Ge\repo\Aurecon Github\github-roadapp\spreadsheets\formulas.xlsx"
+formula_sheet_path = r"spreadsheets/formulas.xlsx"
+data_sheet_path = os.path.join(os.path.dirname(__file__), formula_sheet_path)
 
 emoji = '🔥📐✏️✍️🧠📖💡🏎️🧐👓👀'
 
@@ -442,7 +439,8 @@ with test_tab:
 # Testing locating reference tables in the side bar
 with st.sidebar:
 	# side_tab1 = st.tabs(["Reference Table"])
-	file_path = r"C:\Users\David.Ge\repo\Aurecon Github\github-roadapp\spreadsheets\tables.xlsx"
+	formula_sheet_path = r"spreadsheets/tables.xlsx"
+	data_sheet_path = os.path.join(os.path.dirname(__file__), formula_sheet_path)
 	# df = pd.read_excel(file_path, 3)
 
 	# # Get the column names from the table
@@ -464,11 +462,11 @@ with st.sidebar:
 
 
 
-	xls = pd.ExcelFile(file_path)
+	xls = pd.ExcelFile(data_sheet_path)
 	dfs = {sheet_name: xls.parse(sheet_name) for sheet_name in xls.sheet_names}
 
 	selected_sheet = st.selectbox("Select a table", list(dfs.keys()))
-	df = pd.read_excel(file_path, selected_sheet)
+	df = pd.read_excel(data_sheet_path, selected_sheet)
 
 	# Get the column names from the table
 	column_names = df.columns
